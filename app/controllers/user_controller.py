@@ -44,12 +44,10 @@ def delete_post(id):
 def update_post(id):
     try:
         data = request.get_json()
-        title = data.get('title')
-        author = data.get('author')
-        tags = data.get('tags')
-        content = data.get('content')
-        if title == None and author == None and tags == None and content == None:
-            return {"message": "JSON inválido"}, 400
+        for key in data.keys():
+            print(key == 'author')
+            if key != "title" and key != 'author' and key != "tags" and key != "content":
+                return {"message": "JSON inválido"}, 400
         db.posts.update_one({"id": int(id)}, {"$set": {**data, "updated_at": datetime.utcnow().strftime("%d/%m/%Y %H:%M:%S")}} )
         updated = db.posts.find_one({'id': int(id)})
         del updated['_id']
